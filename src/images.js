@@ -2,14 +2,14 @@
  * images.js
  * ---------
  * Resize/grayscale/cover-crop via @cf-wasm/photon (a Rust image library
- * compiled to WASM) — Workers have no <canvas>/OffscreenCanvas, so this
+ * compiled to WASM) ā€” Workers have no <canvas>/OffscreenCanvas, so this
  * replaces the extension's canvas-based processImage()/cropToCover().
  *
  * Callers should wrap these in try/catch per-image (see worker.js) so a
  * photon failure (corrupt image, unsupported format, oversized image)
  * degrades to "skip this image" rather than failing the whole build.
  */
-const { PhotonImage, resize, crop, SamplingFilter } = require('@cf-wasm/photon/workerd');
+const { PhotonImage, resize, crop, grayscale: applyGrayscale, SamplingFilter } = require('@cf-wasm/photon/workerd');
 
 async function processImage(bytes, maxWidth, grayscale) {
   let img;
@@ -21,7 +21,7 @@ async function processImage(bytes, maxWidth, grayscale) {
     const resized = resize(img, w, h, SamplingFilter.Lanczos3);
     img.free();
     img = resized;
-    if (grayscale) img.grayscale();
+    if (grayscale) applyGrayscale(img);
     const out = img.get_bytes_jpeg(72);
     return new Uint8Array(out);
   } finally {
@@ -29,7 +29,7 @@ async function processImage(bytes, maxWidth, grayscale) {
   }
 }
 
-// Crop-to-fill onto targetW x targetH, centered — same treatment as the
+// Crop-to-fill onto targetW x targetH, centered ā€” same treatment as the
 // extension's cropToCover().
 async function cropToCover(bytes, targetW, targetH, grayscale) {
   let img;
@@ -46,7 +46,7 @@ async function cropToCover(bytes, targetW, targetH, grayscale) {
     const cropped = crop(img, offsetX, offsetY, Math.min(scaledW, offsetX + targetW), Math.min(scaledH, offsetY + targetH));
     img.free();
     img = cropped;
-    if (grayscale) img.grayscale();
+    if (grayscale) applyGrayscale(img);
     const out = img.get_bytes_jpeg(80);
     return new Uint8Array(out);
   } finally {
