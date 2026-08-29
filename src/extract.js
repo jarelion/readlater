@@ -64,16 +64,25 @@ async function getArticle(url, cfg, state, log) {
   } catch (e) {
     localErr = e;
   }
-  if (local && nodeTextLength(local.nodes) > 200) return local;
+  const localLen = local ? nodeTextLength(local.nodes) : 0;
+  if (local && localLen > 200) return local;
 
   if (cfg.apiKey) {
     try {
-      log((local ? 'Local extraction was thin, trying' : 'Local fetch failed, trying') + ' Instaparser: ' + url);
+      log((local ? 'Local extraction was thin (' + localLen + ' chars), trying' : 'Local fetch failed, trying') + ' Instaparser: ' + url);
       const viaApi = await parseWithInstaparser(url, cfg.apiKey, maxImages, state);
       if (nodeTextLength(viaApi.nodes) > 80) return viaApi;
+      log('Instaparser also came back thin for: ' + url);
     } catch (e) {
       log('Instaparser fallback failed (' + e.message + '): ' + url);
     }
+  } else if (!localErr) {
+    // No API key configured, so there's no fallback to try — log exactly
+    // what local extraction saw, since this is otherwise a silent failure:
+    // a 200 response with no usable article content (a bot-check/JS-challenge
+    // page, a paywall interstitial, or a client-rendered page with no
+    // server-side HTML) looks identical to "nothing went wrong" from here.
+    log('Local extraction found only ' + localLen + ' char(s) of text (no Instaparser key configured to fall back to): ' + url);
   }
 
   if (local && local.nodes && local.nodes.length) return local;
