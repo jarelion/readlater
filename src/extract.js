@@ -24,7 +24,7 @@ function extractLocally(html, url, maxImages) {
   return extractReadable(document, url, maxImages);
 }
 
-async function parseWithInstaparser(url, apiKey, maxImages, state) {
+async function parseWithInstaparser(url, apiKey, maxImages, state, log) {
   if (!apiKey) throw new Error('no Instaparser API key configured');
   if (state.instaparserBlocked) throw new Error('rate-limited earlier this run, not retrying');
   const resp = await fetch(INSTAPARSER_URL, {
@@ -46,8 +46,17 @@ async function parseWithInstaparser(url, apiKey, maxImages, state) {
   const data = await resp.json();
   const html = data.html || data.body || '';
   const canonicalUrl = data.url || url;
-  const { document } = parseHTML('<body>' + html + '</body>');
+  const { document } = parseHTML('<html><body>' + html + '</body></html>');
   const nodes = extractNodes(document.body, canonicalUrl, maxImages);
+  const extractedLen = nodeTextLength(nodes);
+  // Instaparser reports its own word count — compare it against what we
+  // actually pulled out of its returned HTML. A big gap here means the bug
+  // is in how we're re-parsing Instaparser's output, not the source page.
+  if (log) {
+    log(
+      'Instaparser reported ' + (data.words || 0) + ' word(s), returned ' + html.length + ' char(s) of HTML, we extracted ' + extractedLen + ' char(s) of text: ' + url
+    );
+  }
   return { title: data.title || null, author: data.author || null, nodes };
 }
 
@@ -70,7 +79,7 @@ async function getArticle(url, cfg, state, log) {
   if (cfg.apiKey) {
     try {
       log((local ? 'Local extraction was thin (' + localLen + ' chars), trying' : 'Local fetch failed, trying') + ' Instaparser: ' + url);
-      const viaApi = await parseWithInstaparser(url, cfg.apiKey, maxImages, state);
+      const viaApi = await parseWithInstaparser(url, cfg.apiKey, maxImages, state, log);
       if (nodeTextLength(viaApi.nodes) > 80) return viaApi;
       log('Instaparser also came back thin for: ' + url);
     } catch (e) {
