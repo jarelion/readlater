@@ -4,7 +4,17 @@ const { extractReadable, extractNodes, nodeTextLength } = require('./readability
 const INSTAPARSER_URL = 'https://instaparser.com/api/1/article';
 
 async function fetchText(url) {
-  const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ReadLaterEpub/1.0)' } });
+  // Some sites' bot-protection (Vox Media's, notably) blocks a
+  // self-identifying User-Agent outright, even for a plain public-page
+  // request. A realistic browser UA + standard Accept headers gets treated
+  // like any other reader's request instead of getting blocked at the edge.
+  const r = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9'
+    }
+  });
   if (!r.ok) throw new Error('HTTP ' + r.status);
   return await r.text();
 }
