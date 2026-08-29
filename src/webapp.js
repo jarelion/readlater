@@ -97,7 +97,9 @@ document.getElementById('build-digest').addEventListener('click', async (e) => {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  setStatus('Saved: ' + filename);
+  const logsHeader = resp.headers.get('X-Build-Logs');
+  setStatus('Saved: ' + filename + (logsHeader ? ' \u2014 see console for build log' : ''));
+  if (logsHeader) { try { console.log(JSON.parse(decodeURIComponent(logsHeader)).join('\\n')); } catch (e) {} }
   loadQueue();
 });
 
