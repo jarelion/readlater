@@ -78,3 +78,77 @@ function extractNodes(elRoot, baseUrl, maxImages) {
       if (!rawSrc) return;
       let abs;
       try {
+        abs = new URL(rawSrc, baseUrl).href;
+      } catch (e) {
+        return;
+      }
+      if (!/^https?:\/\//i.test(abs) || seenSrc.has(abs)) return;
+      const w = parseInt(el.getAttribute('width') || '0', 10);
+      const h = parseInt(el.getAttribute('height') || '0', 10);
+      if ((w && w < 60) || (h && h < 60)) return;
+      seenSrc.add(abs);
+      imgCount++;
+      nodes.push({ type: 'img', src: abs, alt: (el.getAttribute('alt') || '').trim() });
+    } else {
+      // Preserve inline emphasis/links instead of flattening to plain text
+      // (a known gap in the extension version) — walk children directly.
+      const html = inlineHtml(el, baseUrl);
+      const text = el.textContent.replace(/\s+/g, ' ').trim();
+      if (text.length < 2) return;
+      nodes.push({ type: el.tagName.toLowerCase(), text, html });
+    }
+  });
+  return nodes;
+}
+
+// Renders a paragraph-ish element's inline content, keeping <b>/<strong>/
+// <i>/<em>/<a>/<code> and dropping everything else down to plain text.
+const INLINE_KEEP = new Set(['b', 'strong', 'i', 'em', 'a', 'code', 'mark', 'sup', 'sub']);
+function escapeHtmlText(s) {
+  return String(s || '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+}
+function inlineHtml(el, baseUrl) {
+  let out = '';
+  el.childNodes.forEach((node) => {
+    if (node.nodeType === 3) {
+      out += escapeHtmlText(node.textContent);
+    } else if (node.nodeType === 1) {
+      const tag = node.tagName.toLowerCase();
+      if (tag === 'br') {
+        out += '<br/>';
+      } else if (INLINE_KEEP.has(tag)) {
+        const inner = inlineHtml(node, baseUrl);
+        if (tag === 'a') {
+          const href = node.getAttribute('href') || '';
+          let abs = href;
+          try {
+            abs = new URL(href, baseUrl).href;
+          } catch (e) {}
+          out += '<a href="' + escapeHtmlText(abs) + '">' + inner + '</a>';
+        } else {
+          out += '<' + tag + '>' + inner + '</' + tag + '>';
+        }
+      } else {
+        out += inlineHtml(node, baseUrl); // unwrap unknown inline elements, keep their text
+      }
+    }
+  });
+  return out;
+}
+
+function extractReadable(doc, baseUrl, maxImages) {
+  if (!doc.body) return { title: '', author: null, nodes: [] }; // not real HTML (e.g. a plain-text/JSON response)
+  pruneBoilerplate(doc.body);
+  const best = scoreAndPickBest(doc.body);
+  const titleEl = doc.querySelector('h1') || doc.querySelector('title');
+  const title = titleEl ? titleEl.textContent.trim() : '';
+  const author = detectAuthor(doc);
+  const nodes = extractNodes(best, baseUrl, maxImages);
+  return { title, author, nodes };
+}
+
+function nodeTextLength(nodes) {
+  return (nodes || []).reduce((s, n) => s + (n.type !== 'img' ? (n.text || '').length : 0), 0);
+}
+
+module.exports = { extractReadable, extractNodes, nodeTextLength };
