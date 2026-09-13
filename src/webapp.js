@@ -5,27 +5,18 @@ function renderHome() {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Read Later \u2192 EPUB</title>
-<style>
-  body { font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 520px; margin: 40px auto; padding: 0 16px; color: #222; }
-  h1 { font-size: 22px; }
-  input[type=text] { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; margin-bottom: 10px; }
-  button, .btn { display: inline-block; padding: 10px 16px; border: none; border-radius: 8px; background: #5b6bd6; color: #fff; font-size: 14px; cursor: pointer; text-decoration: none; }
-  button.secondary { background: #eee; color: #222; }
-  .row { display: flex; gap: 8px; margin-bottom: 10px; }
-  .row input { flex: 1; margin-bottom: 0; }
-  #queue { margin: 10px 0; }
-  .qitem { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f2f2f2; font-size: 14px; }
-  .qitem button { background: none; color: #b00; padding: 2px 6px; }
-  #status { font-size: 13px; opacity: .75; min-height: 18px; }
-  details { margin-top: 28px; }
-  summary { cursor: pointer; font-weight: 600; }
-  .hint { font-size: 12px; opacity: .6; }
-</style>
+<link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<div class="wrap">
+  <div class="site-header">
+    <div class="site-title">readlater</div>
+    <nav class="site-nav"><a href="/tools/epub-to-pdf/">epub \u2192 pdf</a></nav>
+  </div>
+  <hr>
+
   <h1>Read Later \u2192 EPUB</h1>
   <p class="hint">Paste an article URL to save it as an EPUB, or queue several and build one digest.</p>
-  <p class="hint"><a href="/tools/epub-to-pdf/">Have an EPUB already? Convert it to a reMarkable-sized PDF \u2192</a></p>
 
   <div class="row">
     <input type="text" id="url" placeholder="https://example.com/some-article">
@@ -33,6 +24,9 @@ function renderHome() {
   </div>
   <button class="secondary" id="add-queue">Add to queue instead</button>
 
+  <hr>
+
+  <h2>Queue</h2>
   <div id="queue"></div>
   <button id="build-digest">Build EPUB from queue + feeds</button>
   <div id="status"></div>
@@ -42,6 +36,7 @@ function renderHome() {
     <p class="hint">Same options as the extension: Instaparser fallback key, image handling, RSS/Atom feeds.</p>
     <div id="settings-body">Loading\u2026</div>
   </details>
+</div>
 
 <script>
 const statusEl = document.getElementById('status');
