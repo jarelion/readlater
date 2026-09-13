@@ -13,3 +13,12 @@ kv_namespaces = [
 # (cron syntax, UTC) once you've added feeds via /api/config or the webapp.
 # [triggers]
 # crons = ["0 7 * * *"]  # daily at 07:00 UTC
+
+# Static tool pages (e.g. /tools/epub-to-pdf/) served directly — these are
+# plain self-contained HTML files, so no Worker code is involved at all.
+# run_worker_first defaults to false, meaning a matching asset short-circuits
+# before src/index.js's fetch() ever runs, so this can't collide with the
+# existing "/" or "/api/*" routes.
+[assets]
+directory = "./public/"
+binding = "ASSETS"
