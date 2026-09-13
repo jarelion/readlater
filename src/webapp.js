@@ -25,6 +25,7 @@ function renderHome() {
 <body>
   <h1>Read Later \u2192 EPUB</h1>
   <p class="hint">Paste an article URL to save it as an EPUB, or queue several and build one digest.</p>
+  <p class="hint"><a href="/tools/epub-to-pdf/">Have an EPUB already? Convert it to a reMarkable-sized PDF \u2192</a></p>
 
   <div class="row">
     <input type="text" id="url" placeholder="https://example.com/some-article">
