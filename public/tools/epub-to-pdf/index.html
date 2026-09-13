@@ -3,104 +3,12 @@
 <head>
 <meta charset="utf-8">
 <title>EPUB → PDF for reMarkable Paper Pro Move</title>
-<style>
-  :root {
-    --bg: #faf9f7;
-    --panel: #ffffff;
-    --ink: #1f1c18;
-    --muted: #6b6459;
-    --line: #e4ddd0;
-    --accent: #8a5a2b;
-    --accent-ink: #ffffff;
-    --warn-bg: #fff4e0;
-    --warn-ink: #6b4a00;
-    --err-bg: #fdeceb;
-    --err-ink: #8a2b1f;
-    --ok-bg: #eef6ec;
-    --ok-ink: #2f5d34;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
-  h1 { font-size: 22px; margin: 0 0 4px; }
-  .sub { color: var(--muted); margin: 0 0 32px; font-size: 14px; }
-  .card {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 22px 24px;
-    margin-bottom: 20px;
-  }
-  .card h2 { font-size: 15px; margin: 0 0 4px; }
-  .card .hint { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
-  label.field { display: block; margin-bottom: 12px; }
-  label.field span.lbl { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-  input[type="file"] {
-    font-size: 13px;
-    width: 100%;
-  }
-  .grid4 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
-  .grid4 .field span.lbl { font-weight: 500; color: var(--muted); }
-  .row-inline { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-  .row-inline label.field { flex: 1 1 160px; margin-bottom: 0; }
-  input[type="number"] {
-    width: 100%;
-    padding: 7px 8px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    font-size: 14px;
-    background: #fff;
-  }
-  details { margin-top: 6px; }
-  summary { cursor: pointer; font-size: 13px; color: var(--accent); user-select: none; }
-  button#go {
-    background: var(--accent);
-    color: var(--accent-ink);
-    border: none;
-    border-radius: 8px;
-    padding: 12px 22px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  button#go:disabled { opacity: 0.5; cursor: default; }
-  button#go:hover:not(:disabled) { filter: brightness(1.06); }
-  #log {
-    margin-top: 16px;
-    font: 12.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
-    white-space: pre-wrap;
-    background: #fbfaf7;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 12px 14px;
-    max-height: 220px;
-    overflow-y: auto;
-    display: none;
-  }
-  .banner {
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 13.5px;
-    margin-top: 14px;
-    display: none;
-  }
-  .banner.show { display: block; }
-  .banner.warn { background: var(--warn-bg); color: var(--warn-ink); }
-  .banner.err { background: var(--err-bg); color: var(--err-ink); }
-  .banner.ok { background: var(--ok-bg); color: var(--ok-ink); }
-  .steps { padding-left: 18px; margin: 0; color: var(--muted); font-size: 13.5px; }
-  .steps li { margin-bottom: 6px; }
-  code { background: #f1ede4; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
-  footer { color: var(--muted); font-size: 12px; margin-top: 30px; text-align: center; }
-</style>
+<link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <div class="wrap">
+  <a class="crumb" href="/">← Read Later</a>
+  <hr>
   <h1>EPUB → PDF for reMarkable Paper Pro Move</h1>
   <p class="sub">Runs entirely in this browser tab — nothing is uploaded anywhere. Your EPUB and font files never leave your Mac.</p>
 
