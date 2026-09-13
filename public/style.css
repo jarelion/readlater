@@ -1,0 +1,221 @@
+/* Shared site style, matching the jarelion.com look:
+   Monosten for headings/nav/labels, GT Pressura for body copy,
+   warm paper / near-black themes, sage-green accent, pill tags.
+   Used by the homepage (src/webapp.js) and every page under /tools/. */
+
+@font-face {
+  font-family: "Monosten";
+  src: url("/fonts/Monosten-E.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GT Pressura LCGV";
+  src: url("/fonts/GT-Pressura-LCGV-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #fdf7ed;
+  --panel: #fdf7ed;
+  --ink: #1e1e1e;
+  --muted: #85806f;
+  --line: #d9d3c7;
+  --accent: #5e9872;
+  --accent-ink: #16130d;
+  --pill-bg: #f2ece3;
+  --danger: #a13b2c;
+  --danger-bg: #f6e6e2;
+  --warn-bg: #f7ecd2;
+  --warn-ink: #6b4a00;
+  --err-bg: #f8e3df;
+  --err-ink: #8a2b1f;
+  --ok-bg: #e9f1e6;
+  --ok-ink: #2f5d34;
+  --code-bg: #f2ece3;
+  --font-display: "Monosten", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-body: "GT Pressura LCGV", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #100900;
+    --panel: #100900;
+    --ink: #f1e1cd;
+    --muted: #b3a48e;
+    --line: #3d3429;
+    --accent: #5e9872;
+    --accent-ink: #0c0a06;
+    --pill-bg: #271f15;
+    --danger: #e2685a;
+    --danger-bg: #3a2420;
+    --warn-bg: #3a2f10;
+    --warn-ink: #e8c477;
+    --err-bg: #3a2420;
+    --err-ink: #e2867a;
+    --ok-bg: #1e2f1f;
+    --ok-ink: #9bcf9f;
+    --code-bg: #241d14;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { color-scheme: light dark; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--font-body);
+}
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+
+hr, .divider { border: none; border-top: 1px solid var(--line); margin: 20px 0; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+}
+h1 { font-size: 26px; }
+h2 { font-size: 15px; }
+
+a { color: var(--accent); text-decoration: underline; }
+
+.site-header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; }
+.site-title { font-family: var(--font-display); font-size: 20px; }
+.site-nav { display: flex; gap: 18px; flex-wrap: wrap; }
+.site-nav a { color: var(--accent); font-size: 14px; text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+
+.crumb { display: block; font-family: var(--font-display); font-size: 13px; color: var(--accent); text-decoration: none; margin-bottom: 14px; }
+.crumb:hover { text-decoration: underline; }
+
+.sub, .hint { color: var(--muted); margin: 0 0 20px; font-size: 14px; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-bottom: 20px;
+}
+.card h2 { margin: 0 0 4px; }
+.card .hint { font-size: 13px; margin: 0 0 14px; }
+
+label.field { display: block; margin-bottom: 12px; }
+label.field span.lbl { display: block; font-family: var(--font-display); font-size: 13px; margin-bottom: 4px; }
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+}
+input[type="file"] { font-size: 13px; width: 100%; font-family: var(--font-body); color: var(--ink); }
+
+.grid4 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+.grid4 .field span.lbl { color: var(--muted); }
+.row-inline { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.row-inline label.field { flex: 1 1 160px; margin-bottom: 0; }
+
+.row { display: flex; gap: 8px; margin-bottom: 10px; }
+.row input { flex: 1; margin-bottom: 0; }
+
+button, .btn {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-family: var(--font-display);
+  cursor: pointer;
+  text-decoration: none;
+}
+button:disabled { opacity: 0.5; cursor: default; }
+button:hover:not(:disabled) { filter: brightness(1.06); }
+button.secondary, .btn.secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.pill, .tag {
+  display: inline-block;
+  background: var(--pill-bg);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 13px;
+  font-family: var(--font-display);
+}
+
+#queue { margin: 10px 0; }
+.qitem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.qitem button {
+  background: none;
+  color: var(--danger);
+  padding: 2px 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  border-radius: 6px;
+}
+.qitem button:hover:not(:disabled) { background: var(--danger-bg); filter: none; }
+
+#status { font-size: 13px; color: var(--muted); min-height: 18px; }
+
+#log {
+  margin-top: 16px;
+  font: 12.5px/1.5 var(--font-mono);
+  white-space: pre-wrap;
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  max-height: 220px;
+  overflow-y: auto;
+  display: none;
+}
+
+.banner {
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  margin-top: 14px;
+  display: none;
+}
+.banner.show { display: block; }
+.banner.warn { background: var(--warn-bg); color: var(--warn-ink); }
+.banner.err { background: var(--err-bg); color: var(--err-ink); }
+.banner.ok { background: var(--ok-bg); color: var(--ok-ink); }
+
+details { margin-top: 16px; }
+summary { cursor: pointer; font-family: var(--font-display); font-size: 14px; color: var(--ink); user-select: none; }
+.steps { padding-left: 18px; margin: 0; color: var(--muted); font-size: 13.5px; }
+.steps li { margin-bottom: 6px; }
+
+code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: 12.5px; font-family: var(--font-mono); }
+
+footer { color: var(--muted); font-size: 12px; margin-top: 30px; text-align: center; }
